@@ -34,4 +34,13 @@ userSchema.statics.isExistsUser = async function(email:string){
   return await User.findOne({email})
 }
 
+userSchema.set('toJSON', {
+  transform: function(doc, ret, options) {
+    // Remove the password field from the JSON representation
+    delete ret.password;
+    return ret;
+  }
+});
+
+
 export const User = model<TUser, UserModel>('User', userSchema);
