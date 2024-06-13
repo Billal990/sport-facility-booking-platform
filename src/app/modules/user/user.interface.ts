@@ -1,20 +1,16 @@
 import { Model } from "mongoose";
-import { USER_ROLE } from "./user.constant";
 
-export interface TUser {
-    id:string;
-    password:string;
-    needsPasswordChange:boolean;
-    passwordChangedAt:Date;
-    role:'student' | 'admin' | 'faculty';
-    status:'in-progress' | 'blocked';
-    isDeleted:boolean;
+export interface TUser  {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  role: string;
+  address: string;
+};
+
+export interface UserModel extends Model<TUser>{
+  isExistsUser(email:string):Promise<TUser>
 }
 
-//static methods
-export interface UserModel extends Model<TUser> {
-   isExistsUser(id:string):Promise<TUser>
-   isPasswordMatched(plainPassword:string, hashedPassword:string):Promise<boolean>
-}
 
-export type TUserRole = keyof typeof USER_ROLE;
