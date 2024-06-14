@@ -4,20 +4,26 @@ import { Facility } from '../facility/facility.model';
 import { TBooking } from './booking.interface';
 import { Booking } from './booking.model';
 import { calculatePayableAmount } from './booking.util';
+import { User } from '../user/user.model';
 
 type TCurrentUser = {
   role: string;
   email: string;
-  _id: string;
-  facility: string;
 };
 
 const createBookingIntoDB = async (
   payload: TBooking,
   currentUser: TCurrentUser,
 ) => {
-  const { _id, facility } = currentUser;
-  const existingFacility = await Facility.findOne({ facility });
+  const { role, email } = currentUser;
+
+  const user = await User.findOne({email, role});
+  const existingFacility = await Facility.findOne({_id:payload.facility});
+
+  // check if user exists
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found !');
+  }
 
   // check if facility exists
   if (!existingFacility) {
@@ -67,20 +73,24 @@ const createBookingIntoDB = async (
     ...payload,
     isBooked: 'confirmed',
     payableAmount: payableAmount,
-    user: _id,
+    user: user._id,
   };
 
   const result = await Booking.create(modifiedData);
   return result;
 };
 
+
+
+
 const getAllBookingsFromDB = async () => {
   const result = await Booking.find().populate('user').populate('facility');
   return result;
 };
 
-const getBookingsByUserFromDB = async (user: string) => {
-  const result = await Booking.find({ user })
+const getBookingsByUserFromDB = async (user:{email:string, role:string}) => {
+  const currentUser = await User.findOne({email:user?.email, role:user?.role});
+  const result = await Booking.find({ user:currentUser?._id })
     .populate('user')
     .populate('facility');
   return result;

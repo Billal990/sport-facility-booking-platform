@@ -1,5 +1,5 @@
-import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
-import { ZodError, ZodIssue } from "zod";
+import { ErrorRequestHandler} from "express";
+import { ZodError } from "zod";
 import { TErrorSource } from "../interfaces/error.interface";
 import config from "../config";
 import { handleZodError } from "../errors/handleZodError";
@@ -55,7 +55,7 @@ export const globalErrorHandler:ErrorRequestHandler = (error, req, res, next)=>{
     }
 
 
-    return res
+   return res
     .status(statusCode)
     .json({
         success:false,

@@ -3,7 +3,6 @@ import { AppError } from '../../errors/AppError';
 import { catchAsync } from '../../utils/catchAsync';
 import { User } from '../user/user.model';
 import bcrypt from "bcrypt"
-import { sendResponse } from '../../utils/sendResponse';
 import jwt from 'jsonwebtoken';
 import config from '../../config';
 

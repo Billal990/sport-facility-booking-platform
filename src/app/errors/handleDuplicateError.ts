@@ -1,17 +1,18 @@
-import { TErrorSource } from "../interfaces/error.interface";
-import { TGenericErrorResponse } from "../interfaces/genericeErrorResponse.inerface";
+import { TErrorSource } from '../interfaces/error.interface';
+import { TGenericErrorResponse } from '../interfaces/genericeErrorResponse.inerface';
 
-export const handleDuplicateError = (error:any):TGenericErrorResponse=>{
-    const departmentName = error.message.match(/\"(.*?)\"/)[1];
-    const errorMessages:TErrorSource = [{
-        path:'',
-        message:`${departmentName} is already exists!`
-    }]
+export const handleDuplicateError = (error: Error): TGenericErrorResponse => {
+  const errorMessages: TErrorSource = [
+    {
+      path: '',
+      message: error.message,
+    },
+  ];
 
-    const statusCode = 400;
-    return{
-        message:'Duplicate Error',
-        statusCode,
-        errorMessages
-    }
-}
+  const statusCode = 400;
+  return {
+    message: error.message,
+    statusCode,
+    errorMessages,
+  };
+};
