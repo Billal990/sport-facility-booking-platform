@@ -7,7 +7,7 @@ import { TGenericErrorResponse } from '../interfaces/genericeErrorResponse.inerf
 export const handleValidationError = (
   error: mongoose.Error.ValidationError,
 ):TGenericErrorResponse => {
-  const errorSources: TErrorSource = Object.values(error?.errors).map(val => {
+  const errorMessages: TErrorSource = Object.values(error?.errors).map(val => {
     return {
       path: val.path,
       message: val.message,
@@ -18,6 +18,6 @@ export const handleValidationError = (
   return {
     statusCode,
     message:'Validation Error',
-    errorSources
+    errorMessages
   }
 };

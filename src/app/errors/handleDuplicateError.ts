@@ -3,7 +3,7 @@ import { TGenericErrorResponse } from "../interfaces/genericeErrorResponse.inerf
 
 export const handleDuplicateError = (error:any):TGenericErrorResponse=>{
     const departmentName = error.message.match(/\"(.*?)\"/)[1];
-    const errorSources:TErrorSource = [{
+    const errorMessages:TErrorSource = [{
         path:'',
         message:`${departmentName} is already exists!`
     }]
@@ -12,6 +12,6 @@ export const handleDuplicateError = (error:any):TGenericErrorResponse=>{
     return{
         message:'Duplicate Error',
         statusCode,
-        errorSources
+        errorMessages
     }
 }

@@ -2,7 +2,7 @@ import { ZodError, ZodIssue } from "zod";
 import { TErrorSource } from "../interfaces/error.interface";
 
 export  const handleZodError = (error:ZodError)=>{
-    const errorSources:TErrorSource = error.issues.map((issue:ZodIssue)=>{
+    const errorMessages:TErrorSource = error.issues.map((issue:ZodIssue)=>{
         return {
             path:issue?.path[issue.path.length-1],
             message:issue.message
@@ -13,6 +13,6 @@ export  const handleZodError = (error:ZodError)=>{
     return {
       statusCode,
       message:'Validation Error',
-      errorSources
+      errorMessages
     }
 }

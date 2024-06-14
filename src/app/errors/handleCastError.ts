@@ -3,7 +3,7 @@ import { TErrorSource } from "../interfaces/error.interface";
 import { TGenericErrorResponse } from "../interfaces/genericeErrorResponse.inerface";
 
 export const handleCastError = (error:mongoose.Error.CastError):TGenericErrorResponse=>{
-    const errorSources:TErrorSource = [
+    const errorMessages:TErrorSource = [
         {
             path:error.path,
             message:error.message
@@ -15,6 +15,6 @@ export const handleCastError = (error:mongoose.Error.CastError):TGenericErrorRes
     return {
         statusCode,
         message:'Invalid ID',
-        errorSources
+        errorMessages
     }
 }

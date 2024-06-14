@@ -13,7 +13,7 @@ export const globalErrorHandler:ErrorRequestHandler = (error, req, res, next)=>{
     let statusCode = 500;
     let message = 'Something went wrong!';
 
-    let errorSources:TErrorSource = [{
+    let errorMessages:TErrorSource = [{
         path:'',
         message:'Something went wrong!'
     }]
@@ -23,32 +23,32 @@ export const globalErrorHandler:ErrorRequestHandler = (error, req, res, next)=>{
         const simplifiedError = handleZodError(error);
         statusCode = simplifiedError.statusCode;
         message = simplifiedError.message;
-        errorSources = simplifiedError.errorSources;
+        errorMessages = simplifiedError.errorMessages;
     }else if(error.name === 'ValidationError'){
        const simplifiedError = handleValidationError(error)
        statusCode = simplifiedError.statusCode;
        message = simplifiedError.message;
-       errorSources = simplifiedError.errorSources;
+       errorMessages = simplifiedError.errorMessages;
     }else if(error.name === 'CastError'){
         const simplifiedError = handleCastError(error);
         statusCode = simplifiedError.statusCode;
         message = simplifiedError.message;
-        errorSources = simplifiedError.errorSources;
+        errorMessages = simplifiedError.errorMessages;
     }else if(error.code === 11000){
         const simplifiedError = handleDuplicateError(error);
         statusCode = simplifiedError.statusCode;
         message = simplifiedError.message;
-        errorSources = simplifiedError.errorSources;
+        errorMessages = simplifiedError.errorMessages;
     }else if(error instanceof AppError){
         statusCode = error?.statusCode;
         message = error?.message;
-        errorSources = [{
+        errorMessages = [{
             path:'',
             message:error.message
         }]
     }else if(error instanceof Error){
         message = error?.message;
-        errorSources = [{
+        errorMessages = [{
             path:'',
             message:error.message
         }]
@@ -60,7 +60,7 @@ export const globalErrorHandler:ErrorRequestHandler = (error, req, res, next)=>{
     .json({
         success:false,
         message,
-        errorSources,
+        errorMessages,
         // error,
         stack:config.node_env === "development" ? error?.stack : null
     })
