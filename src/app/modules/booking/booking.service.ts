@@ -27,6 +27,7 @@ const createBookingIntoDB = async (
   //get all bookings for the requested date and check if the requested time is already booked
   const requestedDateCurrentBookings = await Booking.find({
     date: payload.date,
+    facility:payload.facility
   });
   if (requestedDateCurrentBookings.length > 0) {
     const requestedStartTime = new Date(
