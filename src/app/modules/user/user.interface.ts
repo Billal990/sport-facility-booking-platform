@@ -1,4 +1,5 @@
 import { Model } from "mongoose";
+import { USER_ROLE } from "./user.constant";
 
 export interface TUser  {
   name: string;
@@ -13,4 +14,5 @@ export interface UserModel extends Model<TUser>{
   isExistsUser(email:string):Promise<TUser>
 }
 
+export type TUserRole = keyof typeof USER_ROLE;
 
