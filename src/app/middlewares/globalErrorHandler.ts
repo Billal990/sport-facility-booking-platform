@@ -61,7 +61,8 @@ export const globalErrorHandler:ErrorRequestHandler = (error, req, res, next)=>{
         success:false,
         message,
         errorMessages,
-        // error,
         stack:config.node_env === "development" ? error?.stack : null
     })
+     // Call next to pass control to the next middleware function in the chain (not used explicitly in this error handler)
+     next();
 }

@@ -1,4 +1,4 @@
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 import { USER_ROLE } from "./user.constant";
 
 export interface TUser  {
@@ -8,6 +8,7 @@ export interface TUser  {
   password: string;
   role: string;
   address: string;
+  _id?:Types.ObjectId;
 };
 
 export interface UserModel extends Model<TUser>{

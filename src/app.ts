@@ -12,6 +12,14 @@ app.use(express.json());
 //Application routes
 app.use('/api', router);
 
+//Default Route
+app.get('/', (req, res) => {
+    res.json({
+      success: true,
+      message: 'Welcome to sport booking platform',
+    });
+  });
+
 
 //Global Error Handler
 app.use(globalErrorHandler)

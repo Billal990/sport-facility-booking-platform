@@ -2,16 +2,13 @@ import httpStatus from 'http-status';
 import { catchAsync } from '../../utils/catchAsync';
 import { sendResponse } from '../../utils/sendResponse';
 import { bookingServices } from './booking.service';
-import { User } from '../user/user.model';
-import { AppError } from '../../errors/AppError';
-import { Booking } from './booking.model';
 
 const createBooking = catchAsync(async (req, res) => {
   const result = await bookingServices.createBookingIntoDB(
     req.body,
-    req.user,
+    req,
   );
-  sendResponse(res, {
+ return sendResponse(res, {
     success: true,
     message: 'Booking created successfully',
     statusCode: httpStatus.OK,
@@ -32,7 +29,7 @@ const getAllBookings = catchAsync(async (req, res) => {
     });
   }
 
-  sendResponse(res, {
+  return sendResponse(res, {
     success: true,
     message: 'Bookings retrieved successfully',
     statusCode: httpStatus.OK,
@@ -41,7 +38,7 @@ const getAllBookings = catchAsync(async (req, res) => {
 });
 
 const getBookingsByUser = catchAsync(async (req, res) => {
-  const result = await bookingServices.getBookingsByUserFromDB(req?.user);
+  const result = await bookingServices.getBookingsByUserFromDB(req);
 
   // check if any facility found
   if (result.length === 0) {
@@ -53,7 +50,7 @@ const getBookingsByUser = catchAsync(async (req, res) => {
     });
   }
 
-  sendResponse(res, {
+ return sendResponse(res, {
     success: true,
     message: 'Bookings retrieved successfully',
     statusCode: httpStatus.OK,
@@ -63,20 +60,8 @@ const getBookingsByUser = catchAsync(async (req, res) => {
 
 const cancelBooking = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const currentBooking = await Booking.findById(id).populate('user');
-
-  // check if booking exists
-  if (!currentBooking) {
-    throw new AppError(httpStatus.NOT_FOUND, 'This booking not found !');
-  }
-
-  //check if requested user and currently booked user same
-  if (req.user.email !== currentBooking?.user?.email) {
-    throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized');
-  }
-
-  const result = await bookingServices.cancelBookingIntoDB(id);
-  sendResponse(res, {
+  const result = await bookingServices.cancelBookingIntoDB(id, req);
+  return sendResponse(res, {
     success: true,
     message: 'Booking canceled successfully',
     statusCode: httpStatus.OK,

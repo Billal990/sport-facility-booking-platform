@@ -4,27 +4,16 @@ import { Facility } from '../facility/facility.model';
 import { TBooking } from './booking.interface';
 import { Booking } from './booking.model';
 import { calculatePayableAmount } from './booking.util';
-import { User } from '../user/user.model';
+import { Request } from 'express';
 
-type TCurrentUser = {
-  role: string;
-  email: string;
-};
 
 const createBookingIntoDB = async (
   payload: TBooking,
-  currentUser: TCurrentUser,
+  req:Request,
 ) => {
-  const { role, email } = currentUser;
+  const { userId } = req.user;
 
-  const user = await User.findOne({email, role});
   const existingFacility = await Facility.findOne({_id:payload.facility});
-
-  // check if user exists
-  if (!user) {
-    throw new AppError(httpStatus.NOT_FOUND, 'User not found !');
-  }
-
   // check if facility exists
   if (!existingFacility) {
     throw new AppError(httpStatus.NOT_FOUND, 'Facility not found !');
@@ -73,32 +62,42 @@ const createBookingIntoDB = async (
     ...payload,
     isBooked: 'confirmed',
     payableAmount: payableAmount,
-    user: user._id,
+    user: userId,
   };
 
   const result = await Booking.create(modifiedData);
   return result;
 };
 
-
-
-
 const getAllBookingsFromDB = async () => {
   const result = await Booking.find().populate('user').populate('facility');
   return result;
 };
 
-const getBookingsByUserFromDB = async (user:{email:string, role:string}) => {
-  const currentUser = await User.findOne({email:user?.email, role:user?.role});
-  const result = await Booking.find({ user:currentUser?._id })
+const getBookingsByUserFromDB = async (req:Request) => {
+  const result = await Booking.find({ user:req.user.userId })
     .populate('user')
     .populate('facility');
   return result;
 };
 
-const cancelBookingIntoDB = async (id: string) => {
-  const result = await Booking.findByIdAndUpdate(
-    id,
+const cancelBookingIntoDB = async (id:string, req:Request) => {
+  const currentBooking = await Booking.findById(id);
+  const {userId} = req.user;
+
+  // check if booking exists
+  if (!currentBooking) {
+    throw new AppError(httpStatus.NOT_FOUND, 'This booking not found !');
+  }
+
+  // check if user authorized to cancel this booking
+  if(userId !== currentBooking.user.toString()){
+    throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized to cancel this booking !')
+  }
+
+
+  const result = await Booking.findOneAndUpdate(
+    {user:userId, _id:id},
     { isBooked: 'canceled' },
     { new: true },
   );

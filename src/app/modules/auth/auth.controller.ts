@@ -21,16 +21,12 @@ const login = catchAsync(async (req, res) => {
     throw new AppError(httpStatus.BAD_REQUEST, 'Your password does not match !')
   }
 
-  //Login success and response to the user
-  const result = await User.findOne({
-    email:existingUser.email,
-    role:existingUser.role
-  })
 
   //generate jwt access token
   const jwtTokenPayload = {
     email:existingUser.email,
-    role:existingUser.role
+    role:existingUser.role,
+    userId:existingUser._id,
   }
  const token = jwt.sign(jwtTokenPayload, config.jwt_access_secret as string, {expiresIn:config.jwt_access_expire_time});
 
@@ -39,7 +35,7 @@ const login = catchAsync(async (req, res) => {
     statusCode:httpStatus.OK,
     message:'User logged in successfully',
     token:token,
-    data:result
+    data:existingUser
   })
 
 });

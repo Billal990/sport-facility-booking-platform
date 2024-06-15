@@ -1,5 +1,3 @@
-import httpStatus from "http-status"
-import { AppError } from "../../errors/AppError"
 import { Booking } from "../booking/booking.model"
 import { calculateAvailableSlots } from "./slot.utils"
 import moment from "moment"
