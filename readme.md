@@ -19,7 +19,7 @@ The Sport Facility Booking System is a TypeScript-based backend application desi
 ## Installation
 
 1. **Clone the repository:**
-   git clone https://github.com/Billal990/sport-facility-booking-platform
+   git clone https://github.com/Billal990/sport-facility-booking-platform.git
 
 2. **Install dependencies:**
    cd sport-facility-booking-system <br>
@@ -68,7 +68,7 @@ The Sport Facility Booking System is a TypeScript-based backend application desi
 
 
 ## Live API URL
-You can access the live API at https://l2-b3-assignment2-product-management-api.vercel.app/
+You can access the live API at https://sport-facility-booking-platform.vercel.app/
 
 ## Technologies Used
 
